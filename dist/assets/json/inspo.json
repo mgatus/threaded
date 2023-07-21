@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "title": "First post",
+    "img" : "./assets/img/inspo/1.png"
+  },
+  {
+    "id": 2,
+    "title": "2nd post",
+    "img" : "./assets/img/inspo/2.png"
+  },
+  {
+    "id": 3,
+    "title": "3rd post",
+    "img" : "./assets/img/inspo/3.png"
+  },
+  {
+    "id": 4,
+    "title": "4th post",
+    "img" : "./assets/img/inspo/4.png"
+  },
+  {
+    "id": 5,
+    "title": "5th post",
+    "img" : "./assets/img/inspo/5.png"
+  }
+]

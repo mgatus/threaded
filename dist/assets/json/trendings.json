@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "title": "Winter Fashion",
+    "img" : "./assets/img/trendings/1.png"
+  },
+  {
+    "id": 2,
+    "title": "Boots",
+    "img" : "./assets/img/trendings/2.png"
+  },
+  {
+    "id": 3,
+    "title": "Night Out",
+    "img" : "./assets/img/trendings/3.png"
+  },
+  {
+    "id": 4,
+    "title": "Holidays",
+    "img" : "./assets/img/trendings/4.png"
+  },
+  {
+    "id": 5,
+    "title": "Outerwear",
+    "img" : "./assets/img/trendings/5.png"
+  },
+  {
+    "id": 6,
+    "title": "White Dresses",
+    "img" : "./assets/img/trendings/6.png"
+  },
+  {
+    "id": 7,
+    "title": "Sweaters",
+    "img" : "./assets/img/trendings/7.png"
+  },
+  {
+    "id": 8,
+    "title": "Party",
+    "img" : "./assets/img/trendings/8.png"
+  }
+]

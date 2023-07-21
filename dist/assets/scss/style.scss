@@ -1,0 +1,175 @@
+// Import custom fonts
+@import "fonts";
+
+// Add tailwindcss vars
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+[x-cloak] {
+  display: none !important;
+}
+
+#header.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  .special-nav {
+      transform: translateY(-3.4rem);
+      z-index: -1;
+    }
+}
+
+.sticky + * {
+  padding-top: 240px;
+}
+
+header#header{
+  font-family: 'Montserrat', sans-serif;
+  .text {
+    padding: 0;
+    margin: 0;
+  }
+  nav {
+    li {
+      .active {
+        font-weight: 700;
+      }
+    }
+  }
+  .special-nav {
+    transform: translateY(0);
+    transition: all ease-in .2s;
+    li {
+      display: flex;
+      position: relative;
+      img {
+        display: inline;
+        width: 30px;
+        height: 30px;
+        margin-right: 15px;
+      }
+    }
+  }
+}
+
+section#banner {
+  img {
+    aspect-ratio: auto;
+  }
+
+
+  /* CSS styles for the slider container and slides */
+    .slider-container {
+      width: 100%;
+      margin: 0 auto;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .slides {
+      display: flex;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .slide {
+      flex: 0 0 100%;
+    }
+
+    /* CSS styles for pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+      position: relative;
+      left: 0;
+      right: 0;
+      bottom: 70px;
+      height: 0;
+    }
+
+    .dot {
+      height: 10px;
+      width: 10px;
+      border-radius: 50%;
+      background-color: #bbb;
+      margin: 0 5px;
+      cursor: pointer;
+    }
+
+    .dot.active {
+      background-color: #fff;
+    }
+
+    /* CSS styles for arrow buttons */
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 50%;
+    }
+
+    .prev {
+      left: 10px;
+    }
+
+    .next {
+      right: 10px;
+    }
+}
+
+section#deals{
+  .deal {
+    .price {
+      color: #000;
+      text-align: center;
+      font-family: Montserrat;
+      font-size: 32px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+      span {
+        color: #000;
+        text-align: center;
+        font-family: Montserrat;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 800;
+        line-height: normal;
+        text-transform: uppercase;
+        position: relative;
+        top: -5px;
+      }
+    }
+    .description {
+      color: #000;
+      text-align: center;
+      font-family: Montserrat;
+      font-size: 10px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      text-transform: uppercase;
+    }
+  }
+}
+
+section#exclusive {
+  .exclusive-offer {
+    background-image: url(../img/bubbles.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+}
+
+section#arrivals {
+
+}

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Threaded</title>
+  <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+
+<body x-data="cartComponent()">
+  <!--Header-->
+  <header id="header" class="z-[999]">
+    <div class="navigation flex justify-between align-middle items-center py-[23px] px-[24px] bg-white z-20 relative">
+      <nav class="bg-white">
+        <ul class="flex gap-[15px] text-[14px] text-center">
+          <li><a class="active" href="#">WOMEN</a></li>
+          <li><a class="" href="#">PLUS</a></li>
+          <li><a class="" href="#">MEN</a></li>
+          <li><a class="" href="#">ACCESSORIES</a></li>
+        </ul>
+      </nav>
+      <div class="logo">
+        <img src="assets/img/Logo.svg" alt="">
+      </div>
+      <div class="secondary-nav flex align-middle items-center flex-g">
+        <ul class="flex gap-[20px]">
+          <li><a href="#" class="flex"><img src="./assets/img/icons/bx_bx-user.svg" alt="user"></a></li>
+          <li>
+            <a href="#" @click="showBasket()" class="flex relative"><img src="./assets/img/icons/bx_bx-shopping-bag.svg"
+                alt="user">
+              <span x-cloak
+                class="absolute rounded-full block bg-black text-[10px] text-white w-[20px] h-[20px] top-[-10px] right-[-14px] flex justify-center items-center]"
+                x-text="totalObject()" x-show="numberCount"></span></a>
+            <!-- cart basket-->
+            <div x-cloak class="cart absolute top-[56px] right-[20px] p-[20px] z-10 bg-white" x-show="open"
+              x-transition>
+              <div x-init="loadCart()">
+                <ul>
+                  <template x-for="(item, index) in cart" :key="index">
+                    <li class="flex gap-2 p-3 border-b-[1px] border-[#d9d9d9] m-10px justify-around w-full">
+                      <img :src="item.img" class="w-[80px]" alt="">
+                      <div class="details w-1/2">
+                        <strong x-text="item.title"></strong>
+                        <div class="quantity-container flex gap-3 p-1">
+                          <button class="w-[20px] h-[20px] rounded-full bg-black text-white leading-none"
+                            @click="decreaseQuantity(index)" :disabled="item.quantity <= 1">-</button>
+                          <div class="qty" x-text="item.quantity"></div>
+                          <button class="w-[20px] h-[20px] rounded-full bg-black text-white leading-none"
+                            @click="increaseQuantity(index)">+</button>
+                        </div>
+                        <div class="price" x-text="`$${(item.price * item.quantity).toFixed(2)}`"></div>
+                      </div>
+                      <button @click="removeFromCart(index)" class="bg-black text-white leading-none p-3">x</button>
+                    </li>
+                  </template>
+                </ul>
+                <div class="additional flex justify-between pt-4">
+                  <div>
+                    <strong>Total Item/s:</strong>
+                    <span x-text="JSON.stringify(totalObject())"></span>
+                    <p><strong>Total: </strong><span x-text="`$${(calculateTotal().toFixed(2))}`"></span></p>
+                  </div>
+                  <div>
+                    <a href="#" x-on:click="showCheckout()" class="bg-black text-white p-3 inline-block rounded-md">Checkout</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li><a href="#" class="flex"><img src="./assets/img/icons/bx_bx-heart.svg" alt="user"></a></li>
+          <li><a href="#" class="flex"><img src="./assets/img/icons/bx_bx-support.svg" alt="user"></a></li>
+          <li><a href="#" class="flex"><img src="./assets/img/icons/bx_bx-search.svg" alt="user"></a></li>
+        </ul>
+        <div class="dropdown currency flex p-2 border-[1px] rounded-3xl ml-[20px]">
+          <img src="./assets/img/us.png" alt="USA" /> USD $
+        </div>
+      </div>
+
+    </div>
+    <div class="special-nav bg-[#F2F2F2]">
+      <ul class="flex md:gap-[40px] xl:gap-[80px] text-[12px] justify-between px-[39px] py-[10px]">
+        <li><a href="#"><img src="./assets/img/icons/bx_bx-crown.png" alt="star">Exclusive Deals for VIP 2 and Up!</a>
+        </li>
+        <li><a href="#"><img src="./assets/img/icons/bx_bx-star.png" alt="star">Weekly New Arrivals</a></li>
+        <li><a href="#"><img src="./assets/img/icons/mdi_truck-delivery-outline.png" alt="star">Free Shipping On Orders
+            Over $100</a></li>
+        <li><a href="#"><img src="./assets/img/icons/bx_bx-map-pin.png" alt="star">Track Your Order</a></li>
+        <li><a href="#"><img src="./assets/img/icons/bx_bx-purchase-tag.png" alt="star">10% Off On Your First Order!</a>
+        </li>
+      </ul>
+    </div>
+    </div>
+
+  </header>
+  <!--Checkout page-->
+  <section id="checkout-modal" x-cloak x-show="checkout" class=" bg-white w-full">
+    <div class="cart" x-transition>
+      <div x-init="loadCart()">
+        <div class="flex checkout-details p-[20px] gap-10">
+          <div class="left w-[70%]">
+            <ul>
+              <template x-for="(item, index) in cart" :key="index">
+                <li class="flex gap-5 p-3 border-b-[1px] border-[#d9d9d9] m-10px w-full">
+                  <img :src="item.img" class="w-[100px]" alt="">
+                  <div class="details w-1/2">
+                    <strong x-text="item.title"></strong>
+                    <div class="quantity-container flex gap-3 p-1">
+                      <button class="w-[20px] h-[20px] rounded-full bg-black text-white leading-none"
+                        @click="decreaseQuantity(index)" :disabled="item.quantity <= 1">-</button>
+                      <div class="qty" x-text="item.quantity"></div>
+                      <button class="w-[20px] h-[20px] rounded-full bg-black text-white leading-none"
+                        @click="increaseQuantity(index)">+</button>
+                    </div>
+                    <div class="price" x-text="`$${(item.price * item.quantity).toFixed(2)}`"></div>
+                    <a @click="removeFromCart(index)" href="#"
+                      class="bg-black text-white leading-none p-3 inline-block mt-[20px] rounded-md">Delete</a>
+                  </div>
+                </li>
+              </template>
+            </ul>
+            <a href="#" @click="showCheckout()" class="font-semibold mt-3 inline-block">Continue Shopping</a>
+          </div>
+          <div class="right w-[30%] border-[1px] border-black p-[20px] self-start">
+            <strong>Total Item/s:</strong>
+            <span x-text="JSON.stringify(totalObject())"></span>
+            <p><strong>Total: </strong><span x-text="`$${(calculateTotal().toFixed(2))}`"></span></p>
+            <a href="#" class="block bg-black text-white p-3 rounded-md m-1 text-center uppercase">Checkout as Guest</a>
+            <a href="#" class="block bg-black text-white p-3 rounded-md m-1 text-center uppercase">Sign in for faster checkout</a>
+            <a href="#" class="block flex justify-center bg-transparent text-black p-3 rounded-md m-1 border-gray-100 border-2 text-center uppercase text-center"><img src="./assets/img/paypal.png" class="w-[80px] mr-2 uppercase" alt="PayPal"> checkout</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  <!--Banner-->
+  <section id="banner" x-show="!checkout" x-transition>
+    <div class="slider-container">
+      <div class="slides">
+        <div class="slide" style="background-color: #ff6347;"><img src="./assets/img/Hero.png" alt=""></div>
+        <div class="slide" style="background-color: #ffd700;"><img src="./assets/img/Hero.png" alt=""></div>
+        <div class="slide" style="background-color: #ffd700;"><img src="./assets/img/Hero.png" alt=""></div>
+      </div>
+    </div>
+    <div class="pagination"></div>
+    <div class="arrow prev"><img src="./assets/img/icons/ant-design_left-outlined.png" alt="Previous"></div>
+    <div class="arrow next"><img src="./assets/img/icons/ant-design_right-outlined.png" alt="Next"></div>
+  </section>
+  <!--Deals-->
+  <section id="deals" class="flex px-[68px] py-[45px] justify-around" x-show="!checkout" x-transition>
+    <div class="deal flex flex-col text-center">
+      <strong class="price">$5 <span>OFF</span></strong>
+      <div class="description">on orders above $50</div>
+    </div>
+
+    <div class="deal flex flex-col text-center">
+      <strong class="price">$15 <span>OFF</span></strong>
+      <div class="description">on orders above $75</div>
+    </div>
+
+    <div class="deal flex flex-col text-center">
+      <strong class="price">$20 <span>OFF</span></strong>
+      <div class="description">on orders above $150</div>
+    </div>
+
+    <div class="deal flex flex-col text-center">
+      <strong class="price">$30 <span>OFF</span></strong>
+      <div class="description">on orders above $200</div>
+    </div>
+
+    <a href="#"
+      class="bg-black block text-white px-[20px] py-[10px] uppercase inline-flex items-center text-[18px]">Check
+      out all site-wide deals</a>
+  </section>
+  <!--Exclusives-->
+  <section id="exclusive" x-show="!checkout" x-transition>
+    <div class="exclusive-offer flex h-[75px] bg-black text-white p-[18px] justify-evenly">
+      <h3 class="flex items-center uppercase text-[32px] leading-[32px] font-extrabold">black friday exclusive <small
+          class="font-semibold text-[18px] w-[354px] inline-block leading-none ml-[48px]">free shipping on all orders
+          for
+          VIP 2 and up!</small></h3>
+      <a href="#"
+        class="shop-now font-semibold text-[18px] uppercase bg-white text-black px-[20px] py-[10px] leading-none bold">Shop
+        now</a>
+    </div>
+  </section>
+  <!--Trendings-->
+  <section id="trending" class="pt-[40px] pb-[62px]" x-show="!checkout" x-transition>
+    <div class="container m-auto px-[190px]">
+      <h3 class="text-black text-[36px] capitalize text-center font-extrabold pb-[20px]">Now Trending</h3>
+      <small class="text-center block text-[14px] pb-[20px]">See what everyone’s wearing right now</small>
+      <!-- alpine js code -->
+      <div class="groupings flex flex-wrap justify-around" x-data="{ trends:[] }"
+        x-init="trends = await (await fetch('./assets/json/trendings.json')).json()">
+        <template x-for="trend in trends">
+          <div
+            class="trend flex flex-col justify-center items-center overflow-hidden py-[20px] px-[20px] max-w-fit flex-[1_0_21%]">
+            <img :src="trend.img" class="object-fill" :alt="trend.title">
+            <a href="#" class="text-black text-center text-[24px] uppercase font-semibold" x-text="trend.title"></a>
+          </div>
+        </template>
+      </div>
+      <div class="hashtags flex justify-center gap-[25px] pt-[20px]">
+        <div class="tag border-[1px] border-[black] rounded-full px-[20px] py-[10px]">#Thanksgiving</div>
+        <div class="tag border-[1px] border-[black] rounded-full px-[20px] py-[10px]">#NewYears</div>
+        <div class="tag border-[1px] border-[black] rounded-full px-[20px] py-[10px]">#Knitted</div>
+        <div class="tag border-[1px] border-[black] rounded-full px-[20px] py-[10px]">#Pajamas</div>
+        <div class="tag border-[1px] border-[black] rounded-full px-[20px] py-[10px]">#WFH</div>
+        <div class="tag border-[1px] border-[black] rounded-full px-[20px] py-[10px]">#FallFashion</div>
+      </div>
+    </div>
+  </section>
+  <!--New Arrivals-->
+  <section id="arrivals"
+    class="bg-[url('../img/newarrival.png')] bg-no-repeat bg-cover h-auto flex p-[40px] justify-end" x-show="!checkout"
+    x-transition>
+    <div class="details relative flex flex-col -translate-x-[7rem]">
+      <h3 class="text-white font-extrabold text-[86px] mt-[47px] w-1/2 leading-none uppercase">New Arrivals</h3>
+      <small class="pt-[20px] pb-[43px] text-[28px] font-semibold text-white">Get ready for the holidays with
+        us!</small>
+      <a href="#"
+        class="shop-now w-fit inline flex-none font-semibold text-[18px] uppercase bg-white text-black px-[20px] py-[10px] leading-none bold">Shop
+        now</a>
+    </div>
+
+  </section>
+  <!--Buying Zone -->
+  <section id="buyzone" class="pt-[50px] pb-[50px]" x-show="!checkout" x-transition>
+    <h3 class="text-black text-[36px] text-center font-extrabold">Recently Bought</h3>
+    <div class="items flex flex-wrap justify-center gap-[20px] mt-[20px]" x-data="{items:[]}"
+      x-init="items = await (await fetch('./assets/json/buy.json')).json()">
+      <template x-for="item in items">
+        <div class="mt-[20px] w-[225px] px-[10px] text-[14px]">
+          <img :src="item.img" alt="item.title" />
+          <a href="#" x-text="item.title" class="capitalize line-clamp-2 min-h-[45px]"></a>
+          <template x-if="item.discount === '0'">
+            <div class="price font-bold"><span x-text="`$${item.price}`"></span></div>
+          </template>
+          <template class="price" x-if="item.discount !== '0' ">
+            <div class="price font-bold flex gap-5"><span class="text-[#C1272D]" x-text="`$${item.discount}`"></span>
+              <span class="oldprice line-through" x-text="`$${item.price}`"></span>
+            </div>
+          </template>
+          <button type="button"
+            class="border-[#333333] rounded-full border-[1px] w-[100px] mt-[15px] p-2 leading-none hover:bg-black hover:text-white transition-all ease-in-out"
+            @click="addToCart(item.id,item.title,item.price,item.discount,item.img)">Buy</button>
+        </div>
+      </template>
+    </div>
+  </section>
+  <!--Inspo Section-->
+  <section id="inspiration" class="bg-[#F2F2F2] pt-[40px] pb-[60px] px-[60px] text-center" x-show="!checkout" x-transition>
+    <h3 class="text-black text-[36px] font-extrabold mb-[20px]">Your Next Inspo</h3>
+    <small class="text-center block text-[14px] pb-[20px] mt-[10px]">Checkout who’s wearing what by using #THREADEDInspo on Instagram</small>
+    
+    <div class="inspo flex justify-evenly mt-[30px] text-center" x-data="{inspos:[]}" x-init="inspos = await (await fetch('./assets/json/inspo.json')).json()">   
+    <template x-for="inspo in inspos">
+      <div class="post">
+        <img :src="inspo.img" :alt="inspo.title">
+      </div>
+    </template>
+    </div>
+    <a href="#" class="bg-black block text-white mx-auto mt-[30px] px-[20px] py-[10px] uppercase inline-block items-center text-[18px]">View
+      All Posts</a>
+  </section>
+  <section id="newsletter" class="bg-black h-[70px] flex items-center justify-center gap-[50px]" x-show="!checkout" x-transition>
+    <h3 class="uppercase text-white font-extrabold text-[32px]">sign up for exclusive deals and updates</h3>
+    <input type="email" class="p-2 w-[350px]" placeholder="Your E-mail Address">
+  </section>
+  <footer>
+    <div class="upper flex gap-[100px] pt-[40px] px-[40px] pb-[60px]">
+      <div class="links flex gap-10">
+        <ul class="list-none text-[12px]">
+          <li class="p-[10px]"><strong class="uppercase">Company Info</strong></li>
+          <li class="p-[10px]"><a href="#">About THREADED</a></li>
+          <li class="p-[10px]"><a href="#">Affiliate</a></li>
+          <li class="p-[10px]"><a href="#">Blog</a></li>
+          <li class="p-[10px]"><a href="#">Careers</a></li>
+        </ul>
+        <ul class="list-none text-[12px]">
+          <li class="p-[10px]"><strong class="uppercase">Help Support</strong></li>
+          <li class="p-[10px]"><a href="#">fAQ</a></li>
+          <li class="p-[10px]"><a href="#">Shipping</a></li>
+          <li class="p-[10px]"><a href="#">Returns</a></li>
+          <li class="p-[10px]"><a href="#">How to order</a></li>
+          <li class="p-[10px]"><a href="#">How to track</a></li>
+        </ul>
+        <ul class="list-none text-[12px]">
+          <li class="p-[10px]"><strong class="uppercase">Customer Service</strong></li>
+          <li class="p-[10px]"><a href="#">Contact us</a></li>
+          <li class="p-[10px]"><a href="#">Payment methods</a></li>
+        </ul>
+      </div>
+      <div class="socials flex flex-col">
+        <div class="social text-[12px]">
+          <strong class="uppercase my-[10px] inline-block">Follow Us</strong>
+          <div class="icons flex gap-3">
+            <img src="./assets/img/socials/bx_bxl-facebook.svg" alt="">
+            <img src="./assets/img/socials/bx_bxl-twitter.svg" alt="">
+            <img src="./assets/img/socials/bx_bxl-instagram.svg" alt="">
+            <img src="./assets/img/socials/bx_bxl-pinterest-alt.svg" alt="">
+            <img src="./assets/img/socials/bx_bxl-youtube.svg" alt="">
+            <img src="./assets/img/socials/bx_bxl-tiktok.svg" alt="">
+          </div>
+        </div>
+
+        <div class="social text-[12px] mt-[10px]">
+          <strong class="uppercase my-[10px] inline-block">We Accept</strong>
+          <div class="icons flex gap-3">
+            <img class="w-[40px]" src="./assets/img/socials/visa.png" alt="">
+            <img class="w-[40px]" src="./assets/img/socials/mastercard.png" alt="">
+            <img class="w-[40px]" src="./assets/img/socials/maestro.png" alt="">
+            <img class="w-[40px]" src="./assets/img/socials/amex.png" alt="">
+            <img class="w-[40px]" src="./assets/img/socials/paypal.png" alt="">
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="lower flex justify-between pb-[60px] p-[40px]">
+      <div class="copyright text-[12px]">©2021 THREADED All Rights Reserved.</div>
+      <div class="logo w-[193px]"><img src="./assets/img/Logo.svg" alt="Threaded"></div>
+    </div>
+  </footer>
+</body>
+<script src="//unpkg.com/alpinejs" defer></script>
+<script src="./assets/js/app.js"></script>
+</html>
